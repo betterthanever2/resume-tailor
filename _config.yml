@@ -7,7 +7,6 @@ version: 2
 name: Denis Shvetsov
 title: Systems Architect
 email: denis.shvetsov.me@gmail.com
-email: d@subjective.agency
 website: https://betterthanever2.github.io/
 
 # Dark Mode (true/false/never)
@@ -255,7 +254,7 @@ content:
     layout: list
     content:
       - layout: left
-        title: Kiev Slavonic University
+        title: Kyiv Slavonic University
         caption: 2001 - 2006
         sub_title: Master's degree in International Relations
         description: |
