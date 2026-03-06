@@ -237,7 +237,7 @@ content:
     content: |
       I build a project, which purpose is to collect, clean, and analyze data around a certain geographical slice of the media landscape.
 
-      As of beginning of 2026 the implementation consists of 12 applications (including dedicated orchestrator and data hub) that co-exist in the NATS-based system, with 9+ distinct cross-service flows among them. Technologies employed include website crawling (with and without LLMs), machine learning experiments (MLflow), OTel, HTTP endpoints with FastAPI, Telegram bots, various API integrations, as well as LLM-based determination of relevance (CrewAI).
+      As of beginning of 2026 the implementation consists of 12 applications (including dedicated orchestrator and data hub) that co-exist in the NATS-based system, with 9+ distinct cross-service flows among them. I architected and currently manage the entire Docker-based cloud infrastructure for this ecosystem, demonstrating my hands-on capability to deploy, scale, and maintain multi-service environments. Technologies employed include website crawling (with and without LLMs), machine learning experiments (MLflow), OTel, HTTP endpoints with FastAPI, Telegram bots, various API integrations, as well as LLM-based determination of relevance (CrewAI). Additionally, I have minor experience deploying and managing Kubernetes (K8s) environments on other projects.
 
       If you wish to learn more, visit dedicated [documentation repository](https://github.com/subjective-agency/warch). Here you will find:
       

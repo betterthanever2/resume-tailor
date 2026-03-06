@@ -84,6 +84,15 @@ Job Description:
 Candidate's Canonical Experience:
 [canonical_experience]
 
+Candidate's Proof of Skill (Projects/Portfolio):
+[canonical_proof_of_skill]
+
+Candidate's Education:
+[canonical_education]
+
+Candidate's Certifications:
+[canonical_certifications]
+
 Candidate's Complete Skills:
 [skills]
 
@@ -145,6 +154,7 @@ Write a professional summary that:
 3. Uses industry-specific terminology
 4. Demonstrates value proposition
 5. Must be condensed to ~100 words if the canonical summary is larger than 100 words.
+6. MUST be written in the first person (e.g., use "I", "my", do not use the third person like "Denis" or "He").
 
 Format:
 Professional Summary:
@@ -398,6 +408,15 @@ export async function analyzeGaps(
   const canonicalExperience = JSON.stringify(
     canonicalData.config.content?.find((c: any) => c.title === 'Experience')?.content || []
   );
+  const canonicalProofOfSkill = JSON.stringify(
+    canonicalData.config.content?.find((c: any) => c.title === 'Proof of Skill')?.content || []
+  );
+  const canonicalEducation = JSON.stringify(
+    canonicalData.config.content?.find((c: any) => c.title === 'Education')?.content || []
+  );
+  const canonicalCertifications = JSON.stringify(
+    canonicalData.config.content?.find((c: any) => c.title === 'Certifications')?.content || []
+  );
 
   const archetypeLabel = ARCHETYPE_LABELS[companyType];
   const companyInstructions = COMPANY_TYPE_INSTRUCTIONS[companyType];
@@ -408,6 +427,9 @@ export async function analyzeGaps(
     .replace("[company_instructions]", companyInstructions)
     .replace("[job_description]", jobDescription)
     .replace("[canonical_experience]", canonicalExperience)
+    .replace("[canonical_proof_of_skill]", canonicalProofOfSkill)
+    .replace("[canonical_education]", canonicalEducation)
+    .replace("[canonical_certifications]", canonicalCertifications)
     .replace("[skills]", skillsList)
     .replace("[archetype_key]", companyType);
 
