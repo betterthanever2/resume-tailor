@@ -245,11 +245,7 @@ Return ONLY a valid JSON array of the tailored education items based on the inpu
     DESCRIPTION: "Tailors proof of skill section",
     CONTENT: `You are a career expert specializing in resume optimization.
     You are given my canonical proof of skill section and title and description of a job I want to apply to.
-    Proof of skill section consists of multiple items.
-    You want to tailor the canonical proof of skill to better fit with [position] role by following this flow:
-        - For each item, determine if the described project is relevant to the job description.
-        - If it is relevant, summarize into 1 paragraph and keep all links.
-        - If it is not relevant, do not include the item at all.
+    Your task is to tailor the proof of skill content to better fit the [position] role.
     
 Input:
 - Canonical proof of skill: [canonical_proof_of_skill]
@@ -257,8 +253,8 @@ Input:
 - Job description: [job_description]
 
 Output:
-Rewrite the proof of skill section based on the rules above.
-Return ONLY a valid JSON array of the tailored proof of skill items based on the input schema. Do not include markdown formatting like \`\`\`json.`,
+Tailor the content of the proof of skill section. If the project is relevant to the job, summarize it into a concise description suitable for a professional resume. If not relevant, you may still include a brief summary but focus on transferable technical skills.
+Return ONLY the tailored string content for the section. Do not include markdown formatting like \`\`\`json.`,
   },
 
   certifications_tailoring: {
@@ -289,13 +285,14 @@ Return ONLY a valid JSON array of the tailored certification items based on the 
     DESCRIPTION: "Generates personalized cover letter",
     CONTENT: `You are a professional cover letter writer.
     You understand that most achievements can be re-worded to better resonate with requirements of a specific job without being dishonest.
-    You are given professional summary optimized for the job description, experience that is also optimized for the job description, list of my skills, and title and description of a job I want to apply to.
+    You are given professional summary optimized for the job description, experience that is also optimized for the job description, a proof of skill section describing personal projects, a list of my skills, and title and description of a job I want to apply to.
     Your task is to write a compelling cover letter for position: [position].
     Rule of thumb: cover letter completes the resume, it doesn't repeat it. So if some information is already present in the resume, you can omit it from the cover letter or just briefly mention it without going into details.
 
 Input:
 - Optimized summary: [optimized_summary]
 - Optimized Experience: [optmized_experience]
+- Proof of Skill: [proof_of_skill]
 - Job title: [job_title]
 - Job description: [job_description]
 - Skills: [skills]
@@ -304,7 +301,7 @@ Output:
 Write a 4-paragraph cover letter that:
 1. Has a greeting in the 1st paragraph. Addresses the hiring manager by name if it's mentioned in the job description, otherwise addresses "Hiring Team"
 2. Has introductory part in the 2nd paragraph, with explanation why I'm interested in the position, and showing some interest in the company
-3. Has 3rd paragraph dedicated to my skills and experience that are most relevant to the job, with examples of successes.
+3. Has 3rd paragraph dedicated to my skills and experience (including personal projects from Proof of Skill) that are most relevant to the job, with examples of successes.
 4. In the 4th paragraph expresses gratitude for considering my application, followed with a call to action for the interview.
 5. IMPORTANT: Each of the paragraphs must be dried out to 3 sentences max, and the resulting cover letter must be no more than ~180-200 words in total.
 
@@ -524,7 +521,7 @@ export async function tailorResume(
     provider.generateContent({ prompt: experiencePrompt, jsonMode: true }),
     provider.generateContent({ prompt: skillsPrompt, jsonMode: true }),
     provider.generateContent({ prompt: educationPrompt, jsonMode: true }),
-    provider.generateContent({ prompt: proofOfSkillPrompt, jsonMode: true }),
+    provider.generateContent({ prompt: proofOfSkillPrompt }),
     provider.generateContent({ prompt: certificationsPrompt, jsonMode: true })
   ]);
 
@@ -573,12 +570,16 @@ export async function generateCoverLetter(
   const optimizedExperience = JSON.stringify(
     tailoredData.config.content?.find((c: any) => c.title === 'Experience')?.content || []
   );
+  const proofOfSkill = JSON.stringify(
+    tailoredData.config.content?.find((c: any) => c.title === 'Proof of Skill')?.content || ""
+  );
   const skillsList = JSON.stringify(tailoredData.skills.content);
 
   const prompt = PROMPT_TEMPLATES.cover_letter.CONTENT
     .replace("[position]", jobTitle)
     .replace("[optimized_summary]", optimizedSummary)
     .replace("[optmized_experience]", optimizedExperience)
+    .replace("[proof_of_skill]", proofOfSkill)
     .replace("[job_title]", jobTitle)
     .replace("[job_description]", jobDescription)
     .replace("[skills]", skillsList)
